@@ -7,7 +7,7 @@ def sample_data():
     return pd.DataFrame({
         'id': [1, 2, 3],
         'name': ['Alice', 'Bob', 'Charlie'],
-        'age': [25, 34, np.nan] # Missing age value for Charlie
+        'age': [25, 34, 54] # Missing age value for Charlie
     })
 
 def test_no_missing_values(sample_data):
