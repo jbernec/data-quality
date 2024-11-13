@@ -2,18 +2,21 @@ import pytest
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 
-# setup spark session
-
-@pytest.fixture(scope="session")
+@pytest.fixture
 def spark():
-    """
-    Pytest fixture for creating a Spark session.
-    """
-    spark = SparkSession.builder \
-        .appName("Pytest-PySpark-Testing") \
-        .getOrCreate()
+  pass
+  spark = SparkSession.builder \
+          .appName("Pytest-PySpark-Testing") \
+          .getOrCreate()
+  return spark
 
-    return spark
+@pytest.fixture(params=["dbfs:/files/data_sample.csv"])
+def read_data_testing(spark, request):
+  pass
+  #df_lake = spark.read.format("delta").load("abfss://experiments@adls04.dfs.core.windows.net/pytest")
+  source_file = request.param
+  df = spark.read.format("csv").option("header", "true").load(source_file)
+  return df
 
 
 @pytest.fixture
@@ -38,27 +41,7 @@ def sample_spark_dataframe(spark):
     ])
 
     return spark.createDataFrame(data, schema)
-
-@pytest.fixture(params=["dbfs:/files/data_sample.csv"])
-def sample_source_dataframe(spark, request):
-    """
-    Pytest fixture for creating a sample PySpark DataFrame from a file source.
-    """
-    # access the file path passed as a parameter using request.param
-    source_path = request.param
-
-    # define the schema of the DataFrame
-    schema = StructType([
-        StructField("id", IntegerType(), nullable=False),
-        StructField("name", StringType(), nullable=False),
-        StructField("age", IntegerType(), nullable=True),
-        StructField("profession", StringType(), nullable=False)
-    ])
-
-    # read the source file into a DataFrame using the specified schema
-    df = spark.read.format("csv").schema(schema).load(source_path)
-    return df
-
+  
 @pytest.fixture
 def expected_schema():
     """
@@ -70,3 +53,19 @@ def expected_schema():
         StructField("age", IntegerType(), nullable=True),
         StructField("profession", StringType(), nullable=False)
     ])
+
+def test_unique_id_column(read_data_testing):
+    """
+    Test to ensure that the 'id' column has unique values.
+    """
+    total_count = read_data_testing.count()
+    distinct_id_count = read_data_testing.select("id").distinct().count()
+    assert total_count == distinct_id_count, "ID column contains duplicate values!"
+    print(distinct_id_count)
+
+def test_schema_validation(sample_spark_dataframe, expected_schema):
+    """
+    Test to validate that the DataFrame schema matches the expected schema.
+    """
+    actual_schema = sample_spark_dataframe.schema
+    assert actual_schema == expected_schema, f"Schema mismatch! Expected: {expected_schema}, Got: {actual_schema}"
