@@ -6,7 +6,7 @@ import sys
 sys.dont_write_bytecode = True
 
 # Run pytest.
-retcode = pytest.main([".", "-v", "-p", "no:cacheprovider", "-k", "test_unique_id_column"])
+retcode = pytest.main([".", "-v", "-p", "no:cacheprovider", "-k", "test_type_check"])
 
 # Fail the cell execution if there are any test failures.
 assert retcode == 0, "The pytest invocation failed. See the log for details."

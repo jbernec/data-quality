@@ -69,3 +69,34 @@ def test_schema_validation(sample_spark_dataframe, expected_schema):
     """
     actual_schema = sample_spark_dataframe.schema
     assert actual_schema == expected_schema, f"Schema mismatch! Expected: {expected_schema}, Got: {actual_schema}"
+
+
+
+@pytest.fixture
+def invalid_test_data(spark):
+    schema = StructType([
+        StructField("id", IntegerType(), nullable=False),
+        StructField("name", StringType(), nullable=False),
+        StructField("age", IntegerType(), nullable=True),
+        StructField("profession", StringType(), nullable=False)
+    ])
+
+    # Data with some invalid entries
+    data = [
+        (1, "John Doe", 30, "Engineer"),       # Valid row
+        (2, "Jane Doe", "thirty", "Doctor"),   # Invalid age (string)
+        ("3", "Alex", 25, "Lawyer"),           # Invalid id (string)
+        (4, None, 40, "Scientist"),            # Invalid name (None)
+        (5, "Mike", 29, None),                 # Invalid profession (None)
+    ]
+
+    return spark.createDataFrame(data, schema=schema)
+
+
+def test_type_check(invalid_test_data):
+    for row in invalid_test_data.collect():
+        assert isinstance(row["id"], int), f"Invalid type for id: {row['id']}"
+        assert isinstance(row["name"], str), f"Invalid type for name: {row['name']}"
+        assert row["age"] is None or isinstance(row["age"], int), f"Invalid type for age: {row['age']}"
+        assert isinstance(row["profession"], str), f"Invalid type for profession: {row['profession']}"
+
