@@ -3,6 +3,7 @@ from pyspark.sql import SparkSession
 import logging
 import re
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+from pyspark.sql.functions import col
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -132,9 +133,40 @@ def ivalid_pattern_test_data(spark):
     return spark.createDataFrame(data, schema=schema)
 
 
+# Sample DataFrame fixture
+@pytest.fixture
+def invalid_xter_dataframe(spark):
+    data = [
+        (1, "Alice", "Good123"),
+        (2, "Bob", "Valid_text"),
+        (3, "Charlie", "Invalid#Text"),
+        (4, "David", "No@Specials")
+    ]
+    columns = ["id", "name", "comment"]
+    return spark.createDataFrame(data, columns)
+
+# Define the invalid characters (e.g., special characters)
+INVALID_CHARACTERS = "[^a-zA-Z0-9_ ]" #Character Class Exclusion (Negated Set)
+
+# Test function to check for invalid characters in specified columns
+@pytest.mark.parametrize("columns", [["name", "comment"]])
+def test_no_invalid_characters(invalid_xter_dataframe, columns):
+    for column in columns:
+        # Filter rows where the column contains invalid characters
+        invalid_rows = invalid_xter_dataframe.filter(col(column).rlike(INVALID_CHARACTERS))
+        invalid_count = invalid_rows.count()
+
+        # Assert that no invalid characters are found
+        assert invalid_count == 0, f"Invalid characters found in column '{column}'"
+
+        # Optional: Print the invalid rows for debugging
+        if invalid_count > 0:
+            invalid_rows.show()
+
+
 # check for invalid pattern characters
 # Define a regex pattern for invalid characters
-INVALID_CHAR_PATTERN = r"[,/?:]"
+INVALID_CHAR_PATTERN = r"[,/?:]" #Explicit Invalid Characters List
 
 def contains_invalid_chars(value):
     """
@@ -144,14 +176,14 @@ def contains_invalid_chars(value):
         return False
     return re.search(INVALID_CHAR_PATTERN, value) is not None
 
-def test_invalid_characters(test_data):
+def test_invalid_characters(invalid_xter_dataframe):
     """
     Test to check for invalid characters in 'name' and 'profession' columns.
     Logs any rows that contain invalid characters.
     """
     invalid_rows = []
 
-    for idx, row in enumerate(test_data.collect()):
+    for idx, row in enumerate(invalid_xter_dataframe.collect()):
         name, profession = row["name"], row["profession"]
 
         if contains_invalid_chars(name):
@@ -171,7 +203,7 @@ def test_invalid_characters(test_data):
 def quarantine_invalid_rows(spark_session, invalid_rows, quarantine_path="quarantine_data/invalid_rows.parquet"):
     if invalid_rows:
         logger.info(f"Quarantining {len(invalid_rows)} invalid rows.")
-        invalid_df = spark_session.createDataFrame(invalid_rows, schema=test_data.schema)
+        invalid_df = spark_session.createDataFrame(invalid_rows, schema=invalid_xter_dataframe.schema)
         invalid_df.write.mode("overwrite").parquet(quarantine_path)
 
 # quarantine_invalid_rows(test_data.sparkSession, invalid_rows)
