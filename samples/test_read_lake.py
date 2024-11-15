@@ -176,3 +176,12 @@ def quarantine_invalid_rows(spark_session, invalid_rows, quarantine_path="quaran
 
 # quarantine_invalid_rows(test_data.sparkSession, invalid_rows)
 
+
+# Test function to check for null values in specified columns
+@pytest.mark.parametrize("columns", [["name", "age"]])
+def test_no_null_values_in_columns(sample_dataframe, columns):
+    for column in columns:
+        null_count = sample_dataframe.filter(col(column).isNull()).count()
+        assert null_count == 0, f"Column '{column}' contains null values"
+
+
