@@ -1,4 +1,6 @@
 from pyspark.sql.functions import col
+import findspark
+findspark.init()
 
 
 def test_schema_validation(sample_spark_dataframe, expected_schema):

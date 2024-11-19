@@ -1,6 +1,5 @@
 # Databricks notebook source
 import pytest
-import ipytest
 import sys
 
 # Skip writing pyc files on a readonly filesystem.

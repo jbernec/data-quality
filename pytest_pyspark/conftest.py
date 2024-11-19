@@ -1,6 +1,8 @@
 import pytest
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+import findspark
+findspark.init()
 
 # setup spark session
 
@@ -9,12 +11,10 @@ def spark():
     """
     Pytest fixture for creating a Spark session.
     """
-    spark_session = SparkSession.builder \
+    spark = SparkSession.builder \
         .appName("Pytest-PySpark-Testing") \
-        .master("local[*]") \
         .getOrCreate()
-    yield spark_session
-    spark_session.stop()
+    return spark
 
 @pytest.fixture
 def sample_spark_dataframe(spark):
