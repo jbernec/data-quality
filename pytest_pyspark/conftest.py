@@ -17,7 +17,7 @@ def spark():
     return spark
 
 @pytest.fixture
-def sample_spark_dataframe(spark):
+def actual_spark_dataframe(spark):
     """
     Pytest fixture for creating a sample PySpark DataFrame with 6 rows and 4 columns.
     """
@@ -39,8 +39,34 @@ def sample_spark_dataframe(spark):
 
     return spark.createDataFrame(data, schema)
 
-@pytest.fixture(params=["dbfs:/files/data_sample.csv"])
-def sample_source_dataframe(spark, request):
+
+@pytest.fixture
+def actual_schema(spark):
+    """
+    Pytest fixture for creating a sample PySpark DataFrame with 6 rows and 4 columns.
+    """
+    data = [
+        (1, "Alice", 25, "Engineer"),
+        (2, "Bob", 30, "Doctor"),
+        (3, "Charlie", 65, "Artist"),
+        (4, "David", 45, "Chef"),
+        (5, "Eve", 28, "Data Scientist"),
+        (6, "Frank", 33, "Lawyer")
+    ]
+
+    schema = StructType([
+        StructField("id", IntegerType(), nullable=False),
+        StructField("name", StringType(), nullable=False),
+        StructField("age", IntegerType(), nullable=True),
+        StructField("profession", StringType(), nullable=False)
+    ])
+
+    df = spark.createDataFrame(data, schema)
+    return df.schema
+
+
+@pytest.fixture(params=["data/data.csv"])
+def data_source_dataframe(spark, request):
     """
     Pytest fixture for creating a sample PySpark DataFrame from a file source.
     """
@@ -70,3 +96,16 @@ def expected_schema():
         StructField("age", IntegerType(), nullable=True),
         StructField("profession", StringType(), nullable=False)
     ])
+
+
+# Sample DataFrame fixture
+@pytest.fixture
+def invalid_xter_dataframe(spark):
+    data = [
+        (1, "Alice", "Good123"),
+        (2, "Bob", "Valid_text"),
+        (3, "Charlie", "Invalid#Text"),
+        (4, "David", "No@Specials")
+    ]
+    columns = ["id", "name", "comment"]
+    return spark.createDataFrame(data, columns)
