@@ -1,4 +1,6 @@
 from pyspark.sql.functions import col
+import findspark
+findspark.init()
 
 # parameterize the test with different source paths
 #@pytest.mark.parametrize("sample_source_dataframe", ["abfss://experiments@adls04.dfs.core.windows.net/pytest"], indirect=True)

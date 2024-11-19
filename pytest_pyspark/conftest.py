@@ -14,8 +14,7 @@ def spark():
     spark = SparkSession.builder \
         .appName("Pytest-PySpark-Testing") \
         .getOrCreate()
-    yield spark_session
-    spark_session.stop()
+    return spark
 
 @pytest.fixture
 def sample_spark_dataframe(spark):
