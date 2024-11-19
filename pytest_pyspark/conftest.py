@@ -14,7 +14,8 @@ def spark():
     spark = SparkSession.builder \
         .appName("Pytest-PySpark-Testing") \
         .getOrCreate()
-    return spark
+    yield spark_session
+    spark_session.stop()
 
 @pytest.fixture
 def sample_spark_dataframe(spark):
@@ -38,6 +39,26 @@ def sample_spark_dataframe(spark):
     ])
 
     return spark.createDataFrame(data, schema)
+
+@pytest.fixture(params=["dbfs:/files/data_sample.csv"])
+def sample_source_dataframe(spark, request):
+    """
+    Pytest fixture for creating a sample PySpark DataFrame from a file source.
+    """
+    # access the file path passed as a parameter using request.param
+    source_path = request.param
+
+    # define the schema of the DataFrame
+    schema = StructType([
+        StructField("id", IntegerType(), nullable=False),
+        StructField("name", StringType(), nullable=False),
+        StructField("age", IntegerType(), nullable=True),
+        StructField("profession", StringType(), nullable=False)
+    ])
+
+    # read the source file into a DataFrame using the specified schema
+    df = spark.read.format("csv").schema(schema).load(source_path)
+    return df
 
 @pytest.fixture
 def expected_schema():
