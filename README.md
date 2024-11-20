@@ -9,7 +9,29 @@
 #### 6. Mkdir C:\Hadoop-3.3.5
 #### 7. Copy the bin folder containing the winutils.exe file from the cloned hadoop-3.3.5 or latest version to the C:\Hadoop-3.3.5 folder.
 #### 8. Set hadoop environment variable - Set the hadoop home environment variable - [System.Environment]::SetEnvironmentVariable("HADOOP_HOME", "C:\hadoop-3.3.5", [System.EnvironmentVariableTarget]::Machine)
-#### 8. Set the PYTHONPATH env variable to "%SPARK_HOME%\python;%SPARK_HOME%\python\lib\py4j-0.10.9.7-src.zip;%PYTHONPATH%"
-#### 9. Update the Path variable with the following: "%HADOOP_HOME%\bin", "%SPARK_HOME%\bin", "%JAVA_HOME%\bin"
+#### 9. Set the PYTHONPATH env variable to "%SPARK_HOME%\python;%SPARK_HOME%\python\lib\py4j-0.10.9.7-src.zip;%PYTHONPATH%"
+#### 10. Update the Path variable with the following: "%HADOOP_HOME%\bin", "%SPARK_HOME%\bin", "%JAVA_HOME%\bin"
+
+
+It might be necessary to deploy these unit tests and package dependencies in a docker container. A Dockerfile is included the root of the pytest_pyspark project. Instructions on how to deploy are included below:
+
+
+This Dockerfile does the following:
+1. Uses the official Python 3.8 slim image.
+2. Sets the necessary environment variables.
+3. Installs Java.
+4. Downloads and installs Spark.
+5. Downloads and installs Hadoop and winutils.
+6. Copies the current directory into the container.
+7. Installs the Python packages listed in `requirements.txt`.
+8. Exposes port 80.
+9. Runs `pytest` when the container launches.
+
+To build and run the Docker container, use the following commands:
+
+```sh
+docker build -t pytest_pyspark .
+docker run -it pytest_pyspark
+```
 
 
