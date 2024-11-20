@@ -3,8 +3,8 @@
 #### 0. Ensure that python is installed. Preferebly not the latest version. Make sure the python path is set.
 #### 1. Install pyspark and pytest dependencies defined in the requirements.txt file, using the pip installer.
 #### 2. Download and install Java from the https://www.oracle.com/java/technologies/downloads/#jdk21-windows url. Preferably the version before the latest.
-#### 3. Clone the winutils repo from https://github.com/cdarlint/winutils.
-#### 4. Set the spark home environment variable - [System.Environment]::SetEnvironmentVariable("SPARK_HOME", "C:\spark\spark-3.5.0-bin-hadoop3", [System.EnvironmentVariableTarget]::Machine). Verify using the following command - echo $env:SPARK_HOME
+#### 3. Clone the winutils repo from https://github.com/cdarlint/winutils repo.
+#### 4. Set the spark home environment variable - [System.Environment]::SetEnvironmentVariable("SPARK_HOME", "C:\spark\spark-3.5.0-bin-hadoop3", [System.EnvironmentVariableTarget]::Machine). Verify using the following command - echo $env:SPARK_HOME .
 #### 5. Set the java home environment variable - [System.Environment]::SetEnvironmentVariable("JAVA_HOME", "C:\Program Files\Java\jdk-21", [System.EnvironmentVariableTarget]::Machine)
 #### 6. Mkdir C:\Hadoop-3.3.5 .
 #### 7. Copy the bin folder containing the winutils.exe file from the cloned hadoop-3.3.5 or latest version to the C:\Hadoop-3.3.5 folder.
