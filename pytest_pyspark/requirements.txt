@@ -2,3 +2,4 @@ pytest
 pyspark
 pandas
 numpy
+findspark
