@@ -1,0 +1,7 @@
+{
+    "SPARK_HOME": "C:\\spark\\spark-3.5.0-bin-hadoop3",
+    "JAVA_HOME": "C:\\Program Files\\Java\\jdk-21",
+    "HADOOP_HOME": "C:\\hadoop-3.3.6",
+    "PYTHONPATH": "%SPARK_HOME%\\python;%SPARK_HOME%\\python\\lib\\py4j-0.10.9.7-src.zip;%PYTHONPATH%",
+    "Path": "%HADOOP_HOME%\\bin;%SPARK_HOME%\\bin;%JAVA_HOME%\\bin;%Path%"
+}
