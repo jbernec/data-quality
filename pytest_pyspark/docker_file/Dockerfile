@@ -39,4 +39,5 @@ EXPOSE 80
 USER spark
 
 # Run a specific pytest test function when the container starts
-CMD ["pytest", "-k", "${TEST_FUNCTION}"]
+# CMD ["pytest", "-k", "${TEST_FUNCTION}"]
+CMD ["pytest", "/app/test_data_quality.py"]
