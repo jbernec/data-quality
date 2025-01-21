@@ -4,10 +4,10 @@ USER root
 
 RUN set -ex; \
     apt-get update; \
-    apt-get install -y python3 python3-pip; \
+    apt-get install -y python3 python3-pip sudo; \
     rm -rf /var/lib/apt/lists/*
 
-USER spark
+#USER spark
 
 RUN brew tap databricks/tap; \
     brew install databricks; \
@@ -18,10 +18,19 @@ WORKDIR /app
 COPY . /app
 
 # Install pytest
-RUN pip3 install -r requirements.txt
+RUN pip3 install --no-cache-dir pytest pyspark
 
-# Make port 80 available to the world outside this container
-EXPOSE 80
+# Set JAVA_HOME environment variable
+ENV JAVA_HOME=/opt/java/openjdk
+ENV PATH=$JAVA_HOME/bin:$PATH
+
+ENV PYSPARK_PYTHON=/usr/bin/python3
+ENV PYSPARK_DRIVER_PYTHON=/usr/bin/python3
+ENV PATH=$PATH:/opt/spark/bin
+
+
+# Expose ports if needed
+EXPOSE 8080 4040
 
 # Run a specific pytest test function when the container starts
-CMD [f'pytest test_dq.py -v --junitxml={self.test_results_dir}/{self.junit_report}']
+CMD ["pytest"]
