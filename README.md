@@ -27,7 +27,8 @@ This Dockerfile does the following:
 8. Exposes port 80.
 9. Runs `pytest` when the container launches.
 10. An updated Dockerfile uses the Apache Spark Image: https://hub.docker.com/_/spark
-11. Execute the docker run and ensure it stays running: docker run -it -p 8080:8080 -p 4040:4040 ubuntu-spark354 /bin/bash
+11. The associated repo is: https://github.com/apache/spark-docker/blob/6b917ced4279dd7b3a33a81a08db37b3f27e037b/3.5.4/scala2.12-java17-python3-ubuntu/Dockerfile
+12. Execute the docker run and ensure it stays running: docker run -it -p 8080:8080 -p 4040:4040 ubuntu-spark354 /bin/bash
 
 To build and run the Docker container, use the following commands:
 
