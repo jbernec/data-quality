@@ -26,11 +26,14 @@ This Dockerfile does the following:
 7. Installs the Python packages listed in `requirements.txt`.
 8. Exposes port 80.
 9. Runs `pytest` when the container launches.
+10. An updated Dockerfile uses the Apache Spark Image: https://hub.docker.com/_/spark
+11. Execute the docker run and ensure it stays running: docker run -it -p 8080:8080 -p 4040:4040 ubuntu-spark354 /bin/bash
 
 To build and run the Docker container, use the following commands:
 
 ```sh
 docker build -t pytest_pyspark .
+docker build --build-arg TEST_FUNCTION=test_valid_data_types -t my_image .
 docker run -it pytest_pyspark
 ```
 
