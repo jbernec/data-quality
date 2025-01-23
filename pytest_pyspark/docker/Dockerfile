@@ -5,13 +5,32 @@ USER root
 RUN set -ex; \
     apt-get update; \
     apt-get install -y python3 python3-pip sudo; \
+    apt install -y git; \
     rm -rf /var/lib/apt/lists/*
 
 #USER spark
 
-RUN brew tap databricks/tap; \
-    brew install databricks; \
-    curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+# Update and install dependencies required for Homebrew
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    file \
+    git \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Azure CLI and Homebrew
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+RUN curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | sudo bash
+    
+# Add Homebrew to PATH
+ENV PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${PATH}"
+
+RUN brew tap databricks/tap && brew install databricks
+
+# Add databricks to PATH
+ENV PATH="/usr/local/bin:$PATH"
 
 # Install pytest
 RUN pip3 install --no-cache-dir pytest pyspark
@@ -30,12 +49,12 @@ RUN apt update  && \
  	rm -rf /var/lib/apt/lists/*
 
 
-WORKDIR /app/unittests
+WORKDIR /apps/unittests
 RUN mkdir -p results
 
-ENV TEST_OUTPUT_DIR=/app/unittests/results
+ENV TEST_OUTPUT_DIR=/apps/unittests/results
 
-COPY . /app/unittests
+COPY . /apps/unittests
 
 # Expose ports if needed
 EXPOSE 8080 4040
