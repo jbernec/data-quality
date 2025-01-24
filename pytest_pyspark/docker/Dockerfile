@@ -15,12 +15,15 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
     file \
+    unzip \
     git \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Azure CLI and Homebrew
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+RUN bash -c "$(curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh)" || true
 
 RUN curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | sudo bash
     
