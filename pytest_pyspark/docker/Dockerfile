@@ -23,14 +23,7 @@ RUN apt-get update && apt-get install -y \
 # Install Azure CLI and Homebrew
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
-RUN bash -c "$(curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh)" || true
-
-RUN curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | sudo bash
-    
-# Add Homebrew to PATH
-ENV PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${PATH}"
-
-RUN brew tap databricks/tap && brew install databricks
+RUN bash -c "$(curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh)" || true 
 
 # Add databricks to PATH
 ENV PATH="/usr/local/bin:$PATH"
