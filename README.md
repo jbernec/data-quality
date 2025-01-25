@@ -17,14 +17,14 @@ It might be necessary to deploy these unit tests and package dependencies in a d
 
 
 This Dockerfile does the following:
-1. Uses the official Python 3.8 slim image.
+1. Uses the official apache spark:3.5.4-scala2.12-java17-ubuntu image.
 2. Sets the necessary environment variables.
 3. Installs Java.
 4. Downloads and installs Spark.
-5. Downloads and installs Hadoop and winutils.
+5. Downloads and installs Hadoop and winutils --for windows only.
 6. Copies the current directory into the container.
 7. Installs the Python packages listed in `requirements.txt`.
-8. Exposes port 80.
+8. Exposes ports 8080 and 4040.
 9. Runs `pytest` when the container launches.
 10. An updated Dockerfile uses the Apache Spark Image: https://hub.docker.com/_/spark
 11. The associated repo is: https://github.com/apache/spark-docker/blob/6b917ced4279dd7b3a33a81a08db37b3f27e037b/3.5.4/scala2.12-java17-python3-ubuntu/Dockerfile
