@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y \
 # Install Azure CLI and Homebrew
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
-RUN bash -c "$(curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh)" || true 
+RUN bash -c "$(curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/v0.239.1/install.sh)" || true 
 
 # Add databricks to PATH
 ENV PATH="/usr/local/bin:$PATH"

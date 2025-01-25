@@ -1,8 +1,8 @@
 import pytest
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
-import findspark
-findspark.init()
+# import findspark
+# findspark.init()
 
 # setup spark session
 
