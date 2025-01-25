@@ -30,6 +30,7 @@ This Dockerfile does the following:
 11. The associated repo is: https://github.com/apache/spark-docker/blob/6b917ced4279dd7b3a33a81a08db37b3f27e037b/3.5.4/scala2.12-java17-python3-ubuntu/Dockerfile
 12. Execute the docker run and ensure it stays running: docker run -it -p 8080:8080 -p 4040:4040 ubuntu-spark354 /bin/bash.
 13. Execute docker run to run the pytest entry point command.
+14. Install databricks cli with a specific version: https://github.com/databricks/setup-cli
 
 To build and run the Docker container, use the following commands:
 
